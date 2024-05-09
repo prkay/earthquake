@@ -3,7 +3,6 @@ import 'package:earthquake/features/presentation/bloc/bloc.dart';
 import 'package:earthquake/features/presentation/screens/widgets/textfield_widget.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 
@@ -19,11 +18,10 @@ class _EarthQuakeDataScreenState extends State<EarthQuakeDataScreen> {
 
   bool landingDone = false;
   int value = 1;
-  EarthQuakeBloc earthQuakeBloc;
-  ScrollController _scrollController;
+  late EarthQuakeBloc earthQuakeBloc;
+  late ScrollController _scrollController;
   DateTime currentDate = DateTime.now();
-  static DateTime _dateTime;
-  static int _groupValue = 1;
+  late DateTime _dateTime;
   String allProfiles = "";
   String allTypes = "";
   get newValue => null;
@@ -41,7 +39,6 @@ class _EarthQuakeDataScreenState extends State<EarthQuakeDataScreen> {
 
     setState(() {
       _dateTime = currentDate;
-      _groupValue = 1;
     });
     super.initState();
   }
@@ -60,15 +57,15 @@ class _EarthQuakeDataScreenState extends State<EarthQuakeDataScreen> {
       listener: (context, state) {
         if (state is EarthQuakeLoadingState) {
           print(state.isLoading);
-        }else if(state is EarthQuakeDataLoadingSuccessState){
+        } else if (state is EarthQuakeDataLoadingSuccessState) {
           setState(() {
             features = state.features;
           });
           Navigator.pop(context);
-          if(features == null || features.isEmpty){
+          if (features.isEmpty) {
             showInSnackBar("No data found matching to your input.");
           }
-        }else if (state is EarthQuakeDataLoadingFailedState){
+        } else if (state is EarthQuakeDataLoadingFailedState) {
           Navigator.pop(context);
           showInSnackBar("Unable to fetch data. Please try again.");
         }
@@ -76,25 +73,25 @@ class _EarthQuakeDataScreenState extends State<EarthQuakeDataScreen> {
       builder: (context, state) {
         return Scaffold(
           key: _scaffoldKey,
-              body: Stack(
-                children: [
-                  GestureDetector(
-                    child: Container(
-                      color: Color(0xffe6e9ef),
+          body: Stack(
+            children: [
+              GestureDetector(
+                child: Container(
+                  color: Color(0xffe6e9ef),
+                  height: MediaQuery.of(context).size.height,
+                  width: MediaQuery.of(context).size.width,
+                  child: SafeArea(
+                    child: SingleChildScrollView(
+                        child: Container(
+                      margin: EdgeInsets.all(20),
                       height: MediaQuery.of(context).size.height,
-                      width: MediaQuery.of(context).size.width,
-                      child: SafeArea(
-                        child: SingleChildScrollView(
-                            child: Container(
-                              margin: EdgeInsets.all( 20),
-                              height: MediaQuery.of(context).size.height ,
-                              child: _getBodyContent(context, state),
-                            )),
-                      ),
-                    ),
-                  )
-                ],
-              ),
+                      child: _getBodyContent(context, state),
+                    )),
+                  ),
+                ),
+              )
+            ],
+          ),
         );
       },
     );
@@ -120,34 +117,37 @@ class _EarthQuakeDataScreenState extends State<EarthQuakeDataScreen> {
 
   _getCalenderPicker(BuildContext context) {
     return CommonContainer(
-      width: MediaQuery.of(context).size.width*0.4,
-      bodyContent: InkWell(child: _getSelectedDateBody(context),onTap: ()=> _showCalender(),),
+      width: MediaQuery.of(context).size.width * 0.4,
+      bodyContent: InkWell(
+        child: _getSelectedDateBody(context),
+        onTap: () => _showCalender(),
+      ),
     );
   }
 
   _getSelectedDateBody(BuildContext context) {
     return Container(
         child: Row(
-          children: [
-            Container(
-              width: 40,
-              height: 50,
-              child: Image.asset(
-                "images/calender.png",
-              ),
-            ),
-            Text(
-              _getSelectedDate(context),
-              style: TextStyle(
-                color: Color(0xff42697c),
-                fontWeight: FontWeight.normal,
-                fontSize: 10.0,
-                letterSpacing: 0.2,
-              ),
-              textAlign: TextAlign.center,
-            ),
-          ],
-        ));
+      children: [
+        Container(
+          width: 40,
+          height: 50,
+          child: Image.asset(
+            "images/calender.png",
+          ),
+        ),
+        Text(
+          _getSelectedDate(context),
+          style: TextStyle(
+            color: Color(0xff42697c),
+            fontWeight: FontWeight.normal,
+            fontSize: 10.0,
+            letterSpacing: 0.2,
+          ),
+          textAlign: TextAlign.center,
+        ),
+      ],
+    ));
   }
 
   String _getSelectedDate(BuildContext context) {
@@ -158,24 +158,22 @@ class _EarthQuakeDataScreenState extends State<EarthQuakeDataScreen> {
     return Container(
         height: 50,
         child: CommonContainer(
-      width: MediaQuery.of(context).size.width*0.4,
-      bodyContent: Form(
-          key: formKey,
-          child: TextFieldWidgets(
-            inputStyle: _getTextStyleForInputField(),
-            focusNode: magnituedFocus,
-            whitelistingTextInputFormatter:
-            WhitelistingTextInputFormatter(RegExp('[^\\s]')),
-            labelStyle: _getTextStyleForInputField(),
-            inputPlaceHolder: "Magnitude",
-            controller: magnituedController,
-            isVisible: false,
-            validator: (value) {
-              return validateMagnitude(value, context);
-            },
-            inputType: TextInputType.number,
-          )),
-    ));
+          width: MediaQuery.of(context).size.width * 0.4,
+          bodyContent: Form(
+              key: formKey,
+              child: TextFieldWidgets(
+                inputStyle: _getTextStyleForInputField(),
+                focusNode: magnituedFocus,
+                labelStyle: _getTextStyleForInputField(),
+                inputPlaceHolder: "Magnitude",
+                controller: magnituedController,
+                isVisible: false,
+                validator: (value) {
+                  return validateMagnitude(value, context);
+                },
+                inputType: TextInputType.number,
+              )),
+        ));
   }
 
   _getTextStyleForInputField() {
@@ -205,8 +203,7 @@ class _EarthQuakeDataScreenState extends State<EarthQuakeDataScreen> {
                 Container(
                   height: 240,
                   child: CupertinoDatePicker(
-                      initialDateTime:
-                      currentDate,
+                      initialDateTime: currentDate,
                       mode: CupertinoDatePickerMode.date,
                       maximumDate: DateTime.now().add(Duration(seconds: 60)),
                       minimumDate: DateTime.now().subtract(Duration(days: 365)),
@@ -218,9 +215,9 @@ class _EarthQuakeDataScreenState extends State<EarthQuakeDataScreen> {
                   child: Text("OK"),
                   onPressed: () => {
                     Navigator.of(context).pop(),
-                  setState(() {
-                  _dateTime = currentDate;
-                  })
+                    setState(() {
+                      _dateTime = currentDate;
+                    })
                   },
                 )
               ],
@@ -232,25 +229,20 @@ class _EarthQuakeDataScreenState extends State<EarthQuakeDataScreen> {
       padding: EdgeInsets.all(20),
       child: Container(
         width: MediaQuery.of(context).size.width,
-
         decoration: BoxDecoration(
           color: Color(0xffe6e9ef),
           borderRadius: BorderRadius.all(Radius.circular(18)),
         ),
-        child: RaisedButton(
-          elevation: 0,
-          hoverElevation: 0,
-          focusElevation: 0,
-          highlightElevation: 0,
-          onPressed: ()=>_getData(),
-          shape: RoundedRectangleBorder(
-            borderRadius:  BorderRadius.all(Radius.circular(18)),
+        child: ElevatedButton(
+          style: ElevatedButton.styleFrom(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(Radius.circular(18)),
+            ),
+            backgroundColor: Color(0xff2091cc),
           ),
-          color: Color(0xff2091cc),
+          onPressed: () => _getData(),
           child: Padding(
-              padding: EdgeInsets.only(
-                  top: 18,
-                  bottom: 18),
+              padding: EdgeInsets.only(top: 18, bottom: 18),
               child: Text(
                 "Get Data",
                 style: TextStyle(
@@ -261,7 +253,6 @@ class _EarthQuakeDataScreenState extends State<EarthQuakeDataScreen> {
                   letterSpacing: 0.25,
                 ),
                 textAlign: TextAlign.center,
-                textScaleFactor: 1.0,
               )),
         ),
       ),
@@ -271,11 +262,12 @@ class _EarthQuakeDataScreenState extends State<EarthQuakeDataScreen> {
   _getData() {
     magnituedFocus.unfocus();
     final form = formKey.currentState;
-    if (form.validate()) {
-      form.save();
+    if (form?.validate() ?? false) {
+      form?.save();
       _showIndicator();
-      earthQuakeBloc.add(
-          SubmitDataRequestEvent(date: DateFormat('yyyy-MM-dd').format(_dateTime), magnitude: magnituedController.text));
+      earthQuakeBloc.add(SubmitDataRequestEvent(
+          date: DateFormat('yyyy-MM-dd').format(_dateTime),
+          magnitude: magnituedController.text));
     }
   }
 
@@ -291,38 +283,36 @@ class _EarthQuakeDataScreenState extends State<EarthQuakeDataScreen> {
 
   _getDataView(BuildContext context) {
     return Container(
-          margin: EdgeInsets.only(bottom: 10),
-            height: MediaQuery.of(context).size.height*0.65,
-            child: ListView.builder(
-              scrollDirection: Axis.vertical,
-              itemCount: features.length,
-              itemBuilder: (context, index) {
-                return Container(
-                  margin: EdgeInsets.all(8),
-                    child: CommonContainer(
-                color: Color(0xffffffff),
+        margin: EdgeInsets.only(bottom: 10),
+        height: MediaQuery.of(context).size.height * 0.65,
+        child: ListView.builder(
+          scrollDirection: Axis.vertical,
+          itemCount: features.length,
+          itemBuilder: (context, index) {
+            return Container(
+                margin: EdgeInsets.all(8),
+                child: CommonContainer(
+                    color: Color(0xffffffff),
                     bodyContent: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
                         Padding(
                             padding: EdgeInsets.only(
-                                left: 15,right: 15,bottom: 5,top: 10
-                            ),
+                                left: 15, right: 15, bottom: 5, top: 10),
                             child: Text(
-                          features[index].properties.title,
-                          textAlign: TextAlign.start,
-                          style: TextStyle(
-                            color: Color(0xff42697c),
-                            fontWeight: FontWeight.normal,
-                            fontSize: 18.0,
-                            letterSpacing: 0.2,
-                          ),
-                        )),
+                              features[index].properties.title,
+                              textAlign: TextAlign.start,
+                              style: TextStyle(
+                                color: Color(0xff42697c),
+                                fontWeight: FontWeight.normal,
+                                fontSize: 18.0,
+                                letterSpacing: 0.2,
+                              ),
+                            )),
                         Padding(
-                            padding: EdgeInsets.only(
-                              left: 15,right: 15,bottom: 5
-                            ),
+                            padding:
+                                EdgeInsets.only(left: 15, right: 15, bottom: 5),
                             child: Text(
                               features[index].properties.place,
                               textAlign: TextAlign.start,
@@ -334,28 +324,64 @@ class _EarthQuakeDataScreenState extends State<EarthQuakeDataScreen> {
                               ),
                             )),
                         Padding(
-                            padding: EdgeInsets.only(
-                                left: 15,right: 15,bottom: 5
-                            ),
+                            padding:
+                                EdgeInsets.only(left: 15, right: 15, bottom: 5),
                             child: Text(
-                              "Alert: " + features[index].properties.alert.toString().toUpperCase(),
+                              "Alert: " +
+                                  features[index]
+                                      .properties
+                                      .alert
+                                      .toString()
+                                      .toUpperCase(),
                               textAlign: TextAlign.start,
                               style: TextStyle(
-                                color: features[index].properties.alert.toString().toLowerCase() == "green" ? Colors.green : features[index].properties.alert.toString().toLowerCase() == "yellow" ? Colors.yellow : Colors.red,
+                                color: features[index]
+                                            .properties
+                                            .alert
+                                            .toString()
+                                            .toLowerCase() ==
+                                        "green"
+                                    ? Colors.green
+                                    : features[index]
+                                                .properties
+                                                .alert
+                                                .toString()
+                                                .toLowerCase() ==
+                                            "yellow"
+                                        ? Colors.yellow
+                                        : Colors.red,
                                 fontWeight: FontWeight.normal,
                                 fontSize: 14.0,
                                 letterSpacing: 0.2,
                               ),
                             )),
                         Padding(
-                            padding: EdgeInsets.only(
-                                left: 15,right: 15,bottom: 5
-                            ),
+                            padding:
+                                EdgeInsets.only(left: 15, right: 15, bottom: 5),
                             child: Text(
-                              "Status: " + features[index].properties.status.toString().toUpperCase(),
+                              "Status: " +
+                                  features[index]
+                                      .properties
+                                      .status
+                                      .toString()
+                                      .toUpperCase(),
                               textAlign: TextAlign.start,
                               style: TextStyle(
-                                color: features[index].properties.alert.toString().toLowerCase() == "green" ? Colors.green : features[index].properties.alert.toString().toLowerCase() == "yellow" ? Colors.yellow : Colors.red,
+                                color: features[index]
+                                            .properties
+                                            .alert
+                                            .toString()
+                                            .toLowerCase() ==
+                                        "green"
+                                    ? Colors.green
+                                    : features[index]
+                                                .properties
+                                                .alert
+                                                .toString()
+                                                .toLowerCase() ==
+                                            "yellow"
+                                        ? Colors.yellow
+                                        : Colors.red,
                                 fontWeight: FontWeight.normal,
                                 fontSize: 14.0,
                                 letterSpacing: 0.2,
@@ -363,27 +389,31 @@ class _EarthQuakeDataScreenState extends State<EarthQuakeDataScreen> {
                             ))
                       ],
                     )));
-              },
-            ));
+          },
+        ));
   }
 
   void showInSnackBar(String value) {
-    _scaffoldKey.currentState.showSnackBar(new SnackBar(content: new Text(value)));
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(value),
+      ),
+    );
   }
 
   _getHeading(BuildContext context) {
-    return features != null &&features.isNotEmpty ? Container(
-      margin: EdgeInsets.only(bottom: 10),
-      child: Text(
-        "Earthquakes Data",
-          style: TextStyle(
-            decoration: TextDecoration.underline,
-            color: Color(0xff2091cc),
-            fontWeight: FontWeight.normal,
-            fontSize: 25.0,
-            letterSpacing: 0.2,
+    return features.isNotEmpty
+        ? Container(
+            margin: EdgeInsets.only(bottom: 10),
+            child: Text("Earthquakes Data",
+                style: TextStyle(
+                  decoration: TextDecoration.underline,
+                  color: Color(0xff2091cc),
+                  fontWeight: FontWeight.normal,
+                  fontSize: 25.0,
+                  letterSpacing: 0.2,
+                )),
           )
-      ),
-    ) : Padding(padding: EdgeInsets.all(0));
+        : Padding(padding: EdgeInsets.all(0));
   }
 }

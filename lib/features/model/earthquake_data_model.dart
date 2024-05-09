@@ -1,9 +1,11 @@
 class EarthQuakeData {
   List<Features> features;
 
-  EarthQuakeData({ this.features});
+  EarthQuakeData({
+    required this.features,
+  });
 
-  EarthQuakeData.fromJson(Map<String, dynamic> json) {
+  factory EarthQuakeData.fromJson(Map<String, dynamic> json) {
     if (json['features'] != null) {
       features = new List<Features>();
       json['features'].forEach((v) {
@@ -18,13 +20,17 @@ class Features {
   Properties properties;
   String id;
 
-  Features({this.type, this.properties, this.id});
+  Features({
+    required this.type,
+    required this.properties,
+    required this.id,
+  });
 
   Features.fromJson(Map<String, dynamic> json) {
     type = json['type'];
-    properties = json['properties'] != null
+    properties = (json['properties'] != null
         ? new Properties.fromJson(json['properties'])
-        : null;
+        : null)!;
     id = json['id'];
   }
 }
@@ -39,15 +45,16 @@ class Properties {
   String type;
   String title;
 
-  Properties(
-      {this.place,
-        this.time,
-        this.updated,
-        this.alert,
-        this.status,
-        this.magType,
-        this.type,
-        this.title});
+  Properties({
+    required this.place,
+    required this.time,
+    required this.updated,
+    required this.alert,
+    required this.status,
+    required this.magType,
+    required this.type,
+    required this.title,
+  });
 
   Properties.fromJson(Map<String, dynamic> json) {
     place = json['place'];

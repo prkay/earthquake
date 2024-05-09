@@ -1,23 +1,17 @@
 import 'package:flutter/material.dart';
 
 class CommonContainer extends StatelessWidget {
-  @override
-  final BorderRadius borderRadius;
-  final TextStyle textStyle;
-  final double bottomMargin;
-  final double allPadding;
+  final double? bottomMargin;
   final Widget bodyContent;
-  final double width;
-  final Color color;
+  final double? width;
+  final Color? color;
 
-  CommonContainer(
-      {this.borderRadius,
-        this.textStyle,
-        this.bottomMargin,
-        this.allPadding,
-        this.width,
-        this.bodyContent,
-      this.color});
+  CommonContainer({
+    this.bottomMargin,
+    required this.bodyContent,
+    this.color,
+    this.width,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -28,8 +22,7 @@ class CommonContainer extends StatelessWidget {
       width: width ?? MediaQuery.of(context).size.width,
       decoration: BoxDecoration(
         color: color ?? Color(0xffe6e9ef),
-        borderRadius: BorderRadius.all(
-            Radius.circular(18)),
+        borderRadius: BorderRadius.all(Radius.circular(18)),
         boxShadow: [
           BoxShadow(
             color: Colors.white,

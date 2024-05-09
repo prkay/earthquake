@@ -21,15 +21,25 @@ class EarthQuakeLoadingState extends EarthQuakeState {
   List<Object> get props => [isLoading];
 }
 
+class EarthQuakePageReadyState extends EarthQuakeState {
+  final bool isLoading;
+
+  EarthQuakePageReadyState(this.isLoading);
+
+  @override
+  List<Object> get props => [isLoading];
+}
+
 class EarthQuakeDataLoadingSuccessState extends EarthQuakeState {
   final bool isLoading;
   final List<Features> features;
 
-  EarthQuakeDataLoadingSuccessState(this.isLoading,this.features);
+  EarthQuakeDataLoadingSuccessState(this.isLoading, this.features);
 
   @override
-  List<Object> get props => [isLoading,features];
+  List<Object> get props => [isLoading, features];
 }
+
 class EarthQuakeDataLoadingFailedState extends EarthQuakeState {
   final bool isLoading;
 
